@@ -14,6 +14,11 @@ import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.SmsManager;
 import android.view.LayoutInflater;
@@ -26,9 +31,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainActivity extends ActionBarActivity {
+import java.util.Locale;
+
+public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     public static int REQUEST_CODE_CONTACT_NUMBER = 100;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
     public SharedPreferences prefs;
 
     @Override
@@ -36,13 +45,30 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // Set up the action bar.
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, TipFragment.newInstance())
-                    .commit();
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                actionBar.setSelectedNavigationItem(position);
+            }
+        });
+
+        // Create tabs.
+        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
+            actionBar.addTab(
+                    actionBar.newTab()
+                            .setText(mSectionsPagerAdapter.getPageTitle(i))
+                            .setTabListener(this));
         }
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Is it the first run?
         if (prefs.getBoolean("first_launch", true)) {
@@ -69,7 +95,58 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class TipFragment extends Fragment {
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        // When the given tab is selected, switch to the corresponding page in
+        // the ViewPager.
+        mViewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return SendFragment.newInstance();
+                //case 1:
+                    //return WithdrawFragment.newInstance();
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 1;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            Locale l = Locale.getDefault();
+            switch (position) {
+                case 0:
+                    return "Send".toUpperCase(l);
+                case 1:
+                    return "Withdraw".toUpperCase(l);
+            }
+            return null;
+        }
+    }
+
+    public static class SendFragment extends Fragment {
 
         private MainActivity activity;
         private Button btn_contact;
@@ -79,12 +156,12 @@ public class MainActivity extends ActionBarActivity {
         private CheckBox cb_notify;
         private String contactNumber;
 
-        public static TipFragment newInstance() {
-            TipFragment fragment = new TipFragment();
+        public static SendFragment newInstance() {
+            SendFragment fragment = new SendFragment();
             return fragment;
         }
 
-        public TipFragment() {
+        public SendFragment() {
         }
 
         @Override
@@ -114,7 +191,7 @@ public class MainActivity extends ActionBarActivity {
             btn_send.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    sendTip();
+                    send();
                 }
             });
 
@@ -232,7 +309,7 @@ public class MainActivity extends ActionBarActivity {
             contactNumber = number.replaceAll(" ", "").replaceAll("-", "");
         }
 
-        private void sendTip() {
+        private void send() {
             String message;
 
             if (contactNumber == null) {
@@ -260,7 +337,7 @@ public class MainActivity extends ActionBarActivity {
             sms.sendTextMessage(activity.prefs.getString("access_number", ""), null,
                     message, null, null);
 
-            Toast.makeText(activity, "Successfully sent tip.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Successfully sent doge.", Toast.LENGTH_SHORT).show();
         }
     }
 
