@@ -25,6 +25,7 @@ public class SendFragment extends Fragment {
 
     private MainActivity activity;
     private Button btn_contact;
+    private EditText et_fidoname;
     private Button btn_send;
     private EditText et_amount;
     private CheckBox cb_confirm;
@@ -51,6 +52,7 @@ public class SendFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_send, container, false);
 
         btn_contact = (Button) rootView.findViewById(R.id.btn_contact);
+        et_fidoname = (EditText) rootView.findViewById(R.id.et_fidoname);
         btn_send = (Button) rootView.findViewById(R.id.btn_send);
         et_amount = (EditText) rootView.findViewById(R.id.et_amount);
         cb_confirm = (CheckBox) rootView.findViewById(R.id.cb_confirm);
@@ -59,14 +61,25 @@ public class SendFragment extends Fragment {
         btn_contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Show contact list
                 Intent contactInfo = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(contactInfo, MainActivity.REQUEST_CODE_CONTACT_NUMBER);
+
             }
         });
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 send();
+            }
+        });
+
+        et_fidoname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Reset contact state
+                contactNumber = null;
+                btn_contact.setText("Pick from contact list");
             }
         });
 
@@ -172,7 +185,12 @@ public class SendFragment extends Fragment {
                         String entry = entries[itemSelected[0]].toString();
                         String number = entry.split(":")[1].substring(1);
 
-                        updateContact(name[0], number);
+                        // Remove spaces, dashes and then save
+                        contactNumber = number.replaceAll(" ", "").replaceAll("-", "");
+
+                        // Reset fidoname
+                        btn_contact.setText(name[0]);
+                        et_fidoname.setText("");
                     }
                 });
         builder.setNegativeButton(android.R.string.cancel, null);
@@ -180,26 +198,36 @@ public class SendFragment extends Fragment {
         builder.show();
     }
 
-    private void updateContact(String name, String number) {
-        btn_contact.setText(name);
-        contactNumber = number.replaceAll(" ", "").replaceAll("-", "");
-    }
-
     private void send() {
         String message;
 
-        if (contactNumber == null) {
+        // Sanity check
+
+        if (contactNumber == null && et_fidoname.length() == 0) {
             Toast.makeText(activity, "Please select a contact.", Toast.LENGTH_LONG).show();
             return;
-        } else if (!contactNumber.startsWith("+") || contactNumber.startsWith("00")) {
-            Toast.makeText(activity, "Please select a valid international number.\nFor example, a french number should be prefixed with +33.", Toast.LENGTH_LONG).show();
-            return;
+        } else if (contactNumber != null) {
+            if (!contactNumber.startsWith("+") && !contactNumber.startsWith("00")) {
+                Toast.makeText(activity, "Please select a valid international number.\nFor example, a french number should be prefixed with +33.", Toast.LENGTH_LONG).show();
+                return;
+            }
         } else if (et_amount.getText().length() == 0) {
             Toast.makeText(activity, "Please input an amount.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        message = "tip " + contactNumber + " " + et_amount.getText();
+        // Compose the message
+
+        message = "tip ";
+
+        if (contactNumber != null) {
+            message += contactNumber;
+        }
+        else {
+            message += et_fidoname.getText();
+        }
+
+        message += " " + et_amount.getText();
 
         if (cb_notify.isChecked()) {
             message += " notify";
@@ -208,6 +236,8 @@ public class SendFragment extends Fragment {
         if (cb_confirm.isChecked()) {
             message += " confirm";
         }
+
+        // Send the message
 
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(activity.prefs.getString("access_number", ""), null,
