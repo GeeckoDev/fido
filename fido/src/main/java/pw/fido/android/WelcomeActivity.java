@@ -111,6 +111,7 @@ public class WelcomeActivity extends ActionBarActivity {
                     "Finland",
                     "Germany",
                     "Norway",
+                    "South Africa",
                     "Sweden",
                     "United Kingdom",
                     "United States"
@@ -128,14 +129,15 @@ public class WelcomeActivity extends ActionBarActivity {
                 public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
                     String[] phoneNumbers = new String[]{
                             "",
-                            "+61 43 929 4335",
-                            "+1 587 316 3643",
-                            "+358 457 395 07 99",
-                            "+49 177 178 9339",
-                            "+47 594 41 585",
-                            "+46 76 943 8228",
-                            "+44 75 0733 2662",
-                            "+1 605 888 5005"
+                            "+61 43 929 4335", // Australia
+                            "+1 587 316 3643", // Canada
+                            "+358 457 395 07 99", // Finland
+                            "+49 177 178 9339", // Germany
+                            "+47 594 41 585", // Norway
+                            "+27 87 746 0006", // South Africa
+                            "+46 76 943 8228", // Sweden
+                            "+44 75 0733 2662", // United Kingdom
+                            "+1 605 888 5005" // United States
                     };
 
                     if (pos > 0) {
