@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="There's a few things to configure.\n\nFirst, choose the closest country from where you live. FIÐO will receive your messages there. This can be configured later in the settings."
+            android:text="There's a few things to configure.\n\nFirst, choose the country where you live (or the closest one if it isn't listed). FIÐO will send SMS to the country you select. This can be configured later in the settings."
             android:id="@+id/tv_welcome0" />
 
         <Spinner
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Second, if you are not registered to the service yet, you can do it now. You will receive the verification code by email."
+            android:text="Second, if you are not registered to the service yet, you can do it now. You will receive the verification code by email. After that, you will be able to deposit to your FIÐO account."
             android:id="@+id/tv_welcome1"
             android:layout_marginTop="10dp" />
 
