@@ -148,7 +148,7 @@ public class SendFragment extends Fragment {
         final CharSequence[] entries = (contactId >= 0) ? getContactNumbers(contactId) : null;
 
         if (contactId < 0 || entries == null) {
-            Toast.makeText(activity, "Cannot find contact...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Cannot find contact...", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -213,6 +213,6 @@ public class SendFragment extends Fragment {
         sms.sendTextMessage(activity.prefs.getString("access_number", ""), null,
                 message, null, null);
 
-        Toast.makeText(activity, "Successfully sent doge.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "Successfully sent doge.", Toast.LENGTH_LONG).show();
     }
 }
