@@ -16,6 +16,7 @@ import android.view.MenuItem;
 
 import java.util.Locale;
 
+import pw.fido.android.fragment.ReceiveFragment;
 import pw.fido.android.fragment.SendFragment;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
@@ -106,8 +107,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             switch (position) {
                 case 0:
                     return SendFragment.newInstance();
-                //case 1:
-                    //return WithdrawFragment.newInstance();
+                case 1:
+                    return ReceiveFragment.newInstance();
                 default:
                     return null;
             }
@@ -115,7 +116,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
 
         @Override
@@ -125,7 +126,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 case 0:
                     return "Send".toUpperCase(l);
                 case 1:
-                    return "Withdraw".toUpperCase(l);
+                    return "Receive".toUpperCase(l);
             }
             return null;
         }

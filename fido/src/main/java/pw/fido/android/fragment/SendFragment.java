@@ -48,7 +48,7 @@ public class SendFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_send, container, false);
 
         btn_contact = (Button) rootView.findViewById(R.id.btn_contact);
         btn_send = (Button) rootView.findViewById(R.id.btn_send);
