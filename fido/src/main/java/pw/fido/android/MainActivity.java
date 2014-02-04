@@ -16,6 +16,7 @@ import android.view.MenuItem;
 
 import java.util.Locale;
 
+import pw.fido.android.fragment.MoreFragment;
 import pw.fido.android.fragment.ReceiveFragment;
 import pw.fido.android.fragment.SendFragment;
 
@@ -109,6 +110,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     return SendFragment.newInstance();
                 case 1:
                     return ReceiveFragment.newInstance();
+                case 2:
+                    return MoreFragment.newInstance();
                 default:
                     return null;
             }
@@ -116,7 +119,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -127,6 +130,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     return "Send".toUpperCase(l);
                 case 1:
                     return "Receive".toUpperCase(l);
+                case 2:
+                    return "More".toUpperCase(l);
             }
             return null;
         }
