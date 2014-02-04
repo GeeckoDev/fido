@@ -69,6 +69,7 @@ public class ReceiveFragment extends Fragment {
                 sms.sendTextMessage(activity.prefs.getString("access_number", ""), null,
                         "set autowithdraw " + address, null, null);
 
+                et_address.setText("");
                 Toast.makeText(activity, "Dogecoin withdraw address updated.", Toast.LENGTH_LONG).show();
             }
         });

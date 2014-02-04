@@ -243,6 +243,13 @@ public class SendFragment extends Fragment {
         sms.sendTextMessage(activity.prefs.getString("access_number", ""), null,
                 message, null, null);
 
+        // Reset
+
+        contactNumber = null;
+        btn_contact.setText("Pick from contact list");
+        et_fidoname.setText("");
+        et_amount.setText("10");
+
         Toast.makeText(activity, "Successfully sent doge.", Toast.LENGTH_LONG).show();
     }
 }
